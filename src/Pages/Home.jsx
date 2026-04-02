@@ -242,7 +242,7 @@ const Home = () => {
               data-aos="fade-left"
               data-aos-delay="600"
             >
-              <div className="relative w-full opacity-90 overflow-visible">
+              <div className="relative w-full opacity-90">
                 <div
                   className={`absolute inset-0 bg-gradient-to-r from-[#6366f1]/10 to-[#a855f7]/10 rounded-3xl blur-3xl transition-all duration-700 ease-in-out ${
                     isHovering ? "opacity-50 scale-105" : "opacity-20 scale-100"
@@ -250,17 +250,15 @@ const Home = () => {
                 ></div>
 
                 <div
-                  className={`relative lg:left-12 z-10 w-full opacity-90 transform transition-transform duration-500 ${
+                  className={`relative z-10 w-[78%] sm:w-[68%] lg:w-[72%] max-w-[520px] mx-auto opacity-90 transform transition-transform duration-500 ${
                     isHovering ? "scale-105" : "scale-100"
                   }`}
                 >
                   <img
                     src={codingGifSrc}
                     alt="Coding animation"
-                    className={`w-full h-full object-contain transition-all duration-500 ${
-                      isHovering
-                        ? "scale-[180%] sm:scale-[160%] md:scale-[150%] lg:scale-[145%] rotate-2"
-                        : "scale-[175%] sm:scale-[155%] md:scale-[145%] lg:scale-[140%]"
+                    className={`w-full h-auto object-contain transition-all duration-500 ${
+                      isHovering ? "scale-[1.03]" : "scale-100"
                     }`}
                     loading="eager"
                   />
