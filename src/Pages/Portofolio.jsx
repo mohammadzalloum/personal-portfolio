@@ -296,15 +296,17 @@ const localProjects = [
     Link: "https://github.com/mohammadzalloum/Line-Following-Robot",
     category: "robotics",
   },
+
   {
-    id: 9,
-    Img: asset("projects/smartbasin.png"),
-    Title: "Smart Basin",
-    Description:
-      "Touchless, sensor-driven basin with microcontroller control and fail-safe logic for hygiene and water efficiency.",
-    Link: "https://github.com/mohammadzalloum/Smart-Basin",
-    category: "robotics",
-  },
+  id: 6,
+  Img: asset("projects/smart-helmet.png"),
+  Title: "Safeguard Fall & ADL Detection",
+  Description:
+    "An AI-based fall and ADL detection system built with a hierarchical Temporal Convolutional Network (TCN) using chest-mounted IMU signals from the UMAFall dataset. It performs both coarse classification (ADL vs FALL) and fine-grained activity recognition across 11 motion classes for the Safeguard Helmet project.",
+  Link: "https://github.com/mohammadzalloum/Safeguard-Fall-ADL-TCN",
+  badge: "AI",
+  category: "ai",
+},
 
   {
     id: 7,
@@ -325,16 +327,16 @@ const localProjects = [
     category: "blockchain",
     badge: "Web3",
   },
-  {
-  id: 6,
-  Img: asset("projects/smart-helmet.png"),
-  Title: "Safeguard Fall & ADL Detection",
-  Description:
-    "An AI-based fall and ADL detection system built with a hierarchical Temporal Convolutional Network (TCN) using chest-mounted IMU signals from the UMAFall dataset. It performs both coarse classification (ADL vs FALL) and fine-grained activity recognition across 11 motion classes for the Safeguard Helmet project.",
-  Link: "https://github.com/mohammadzalloum/Safeguard-Fall-ADL-TCN",
-  badge: "AI",
-  category: "ai",
-},
+
+    {
+    id: 9,
+    Img: asset("projects/smartbasin.png"),
+    Title: "Smart Basin",
+    Description:
+      "Touchless, sensor-driven basin with microcontroller control and fail-safe logic for hygiene and water efficiency.",
+    Link: "https://github.com/mohammadzalloum/Smart-Basin",
+    category: "robotics",
+  }
 ];
 
 // Local fallback certificates
