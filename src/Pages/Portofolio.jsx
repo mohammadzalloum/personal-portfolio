@@ -14,7 +14,14 @@ import TechStackIcon from "../components/TechStackIcon";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Certificate from "../components/Certificate";
-import { Code, Award, Boxes, Bot, BrainCircuit } from "lucide-react";
+import {
+  Code,
+  Award,
+  Boxes,
+  Bot,
+  BrainCircuit,
+  Blocks,
+} from "lucide-react";
 import { asset } from "../utils/asset.js";
 
 /* ========= Helpers ========= */
@@ -83,10 +90,78 @@ function a11yProps(index) {
 
 const encodeLocal = (p) => (p ? encodeURI(p) : p);
 
+const blockchainProjectPlaceholder = `data:image/svg+xml;utf8,${encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#1e1b4b" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="700" rx="36" fill="url(#bg)" />
+  <circle cx="220" cy="120" r="170" fill="#8b5cf6" opacity="0.08" />
+  <circle cx="1040" cy="580" r="220" fill="#3b82f6" opacity="0.10" />
+
+  <rect x="90" y="120" width="1020" height="460" rx="32" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.14)" />
+  <rect x="140" y="180" width="170" height="170" rx="24" fill="url(#glow)" opacity="0.95" />
+  <text x="225" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="62" font-weight="700" fill="white">BRIX</text>
+
+  <text x="380" y="245" font-family="Arial, sans-serif" font-size="64" font-weight="700" fill="white">Blockchain Project</text>
+  <text x="380" y="310" font-family="Arial, sans-serif" font-size="30" fill="#cbd5e1">Fractional real estate investment dApp</text>
+
+  <rect x="380" y="360" width="180" height="44" rx="22" fill="rgba(139,92,246,0.18)" stroke="rgba(139,92,246,0.35)" />
+  <text x="470" y="389" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#e9d5ff">Solidity</text>
+
+  <rect x="580" y="360" width="160" height="44" rx="22" fill="rgba(59,130,246,0.18)" stroke="rgba(59,130,246,0.35)" />
+  <text x="660" y="389" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#dbeafe">Truffle</text>
+
+  <rect x="760" y="360" width="170" height="44" rx="22" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.16)" />
+  <text x="845" y="389" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#e2e8f0">Next.js</text>
+
+  <rect x="380" y="430" width="240" height="44" rx="22" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.14)" />
+  <text x="500" y="459" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#e2e8f0">DAO Governance</text>
+
+  <rect x="640" y="430" width="210" height="44" rx="22" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.14)" />
+  <text x="745" y="459" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#e2e8f0">Tokenized Shares</text>
+</svg>
+`)}`;
+
 const projectCategories = [
   { key: "robotics", label: "Robotics", icon: Bot },
   { key: "ai", label: "AI Projects", icon: BrainCircuit },
+  { key: "blockchain", label: "Blockchain", icon: Blocks },
 ];
+
+const projectCategoryContent = {
+  robotics: {
+    description:
+      "Robotics, embedded systems, automation, and smart-device projects.",
+    emptyTitle: "No robotics projects yet",
+    emptyText: "This section is ready for robotics and embedded systems work.",
+    icon: Bot,
+  },
+  ai: {
+    description:
+      "Artificial intelligence, machine learning, and intelligent systems projects.",
+    emptyTitle: "AI projects coming soon",
+    emptyText:
+      'This section is ready. Add any future AI project with category: "ai" and it will appear here automatically.',
+    icon: BrainCircuit,
+  },
+  blockchain: {
+    description:
+      "Blockchain, smart contracts, dApps, and decentralized product experiments.",
+    emptyTitle: "No blockchain projects yet",
+    emptyText:
+      'This section is ready for Web3 work. Add any future blockchain project with category: "blockchain" and it will appear here automatically.',
+    icon: Blocks,
+  },
+};
 
 const detectProjectCategory = (project) => {
   const rawCategory = String(project?.Category || project?.category || "")
@@ -94,11 +169,31 @@ const detectProjectCategory = (project) => {
     .toLowerCase();
 
   if (
-    ["ai", "artificial intelligence", "machine learning", "ml", "deep learning"].includes(
-      rawCategory
-    )
+    [
+      "ai",
+      "artificial intelligence",
+      "machine learning",
+      "ml",
+      "deep learning",
+    ].includes(rawCategory)
   ) {
     return "ai";
+  }
+
+  if (
+    [
+      "blockchain",
+      "web3",
+      "smart contracts",
+      "smart contract",
+      "solidity",
+      "ethereum",
+      "dapp",
+      "dao",
+      "defi",
+    ].includes(rawCategory)
+  ) {
+    return "blockchain";
   }
 
   const searchableText = `${
@@ -113,7 +208,28 @@ const detectProjectCategory = (project) => {
     return "ai";
   }
 
+  if (
+    /blockchain|web3|solidity|smart contract|ethereum|dao|defi|dapp|on-chain|tokenized|tokenised|fractional real estate|real estate investment/.test(
+      searchableText
+    )
+  ) {
+    return "blockchain";
+  }
+
   return "robotics";
+};
+
+const normalizeImagePath = (value) => {
+  if (!value) return value;
+  if (
+    typeof value === "string" &&
+    (value.startsWith("http://") ||
+      value.startsWith("https://") ||
+      value.startsWith("data:image"))
+  ) {
+    return value;
+  }
+  return encodeLocal(value);
 };
 
 /* ========= Static Data ========= */
@@ -199,6 +315,26 @@ const localProjects = [
     Link: "https://github.com/mohammadzalloum/Smart-home-model",
     category: "robotics",
   },
+  {
+    id: 8,
+    Img: blockchainProjectPlaceholder,
+    Title: "BRIX Fractional Real Estate",
+    Description:
+      "A blockchain-based fractional real-estate investment dApp built with Solidity smart contracts, Truffle, Ganache, and a Next.js frontend. It focuses on tokenized property shares, on-chain ownership and distribution flows, and DAO-style governance for property decisions and expenses.",
+    Link: "https://github.com/mohammadzalloum/brix-fractional-real-estate",
+    category: "blockchain",
+    badge: "Web3",
+  },
+  {
+  id: 9,
+  Img: asset("projects/smart-helmet.png"),
+  Title: "Safeguard Fall & ADL Detection",
+  Description:
+    "An AI-based fall and ADL detection system built with a hierarchical Temporal Convolutional Network (TCN) using chest-mounted IMU signals from the UMAFall dataset. It performs both coarse classification (ADL vs FALL) and fine-grained activity recognition across 11 motion classes for the Safeguard Helmet project.",
+  Link: "https://github.com/mohammadzalloum/Safeguard-Fall-ADL-TCN",
+  badge: "AI",
+  category: "ai",
+}
 ];
 
 // Local fallback certificates
@@ -219,9 +355,9 @@ export default function FullWidthTabs() {
   const [projects, setProjects] = useState([]);
   const [certificates, setCertificates] = useState([]);
 
-  // Only keep "See more" for certificates
   const [showAllCertificates, setShowAllCertificates] = useState(false);
-  const [activeProjectCategory, setActiveProjectCategory] = useState("robotics");
+  const [activeProjectCategory, setActiveProjectCategory] =
+    useState("robotics");
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -244,7 +380,10 @@ export default function FullWidthTabs() {
     try {
       const [projectsResponse, certificatesResponse] = await Promise.all([
         supabase.from("projects").select("*").order("id", { ascending: true }),
-        supabase.from("certificates").select("*").order("id", { ascending: true }),
+        supabase
+          .from("certificates")
+          .select("*")
+          .order("id", { ascending: true }),
       ]);
 
       if (projectsResponse.error) throw projectsResponse.error;
@@ -284,8 +423,7 @@ export default function FullWidthTabs() {
       (lp) =>
         !mergedProjects.some(
           (rp) =>
-            String(rp.id ?? rp.Title ?? "")
-              .toLowerCase() ===
+            String(rp.id ?? rp.Title ?? "").toLowerCase() ===
             String(lp.id ?? lp.Title ?? "").toLowerCase()
         )
     ),
@@ -293,7 +431,9 @@ export default function FullWidthTabs() {
 
   const normalizedProjects = rawProjects.map((p, i) => ({
     id: p.id ?? i,
-    Img: encodeLocal(p.Img || p.image || p.thumbnail || p.cover || p.url || p.path),
+    Img: normalizeImagePath(
+      p.Img || p.image || p.thumbnail || p.cover || p.url || p.path
+    ),
     Title: p.Title || p.title || `Project ${i + 1}`,
     Description: p.Description || p.description || "",
     Link: p.Link || p.link || p.demo || p.demoUrl || "#",
@@ -306,7 +446,7 @@ export default function FullWidthTabs() {
       acc[project.Category] = (acc[project.Category] || 0) + 1;
       return acc;
     },
-    { robotics: 0, ai: 0 }
+    { robotics: 0, ai: 0, blockchain: 0 }
   );
 
   const displayedProjectsFixed = normalizedProjects.filter(
@@ -326,9 +466,14 @@ export default function FullWidthTabs() {
     ? normalizedCertificates
     : normalizedCertificates.slice(0, initialCertItems);
 
+  const activeCategoryMeta =
+    projectCategoryContent[activeProjectCategory] ||
+    projectCategoryContent.robotics;
+
+  const EmptyIcon = activeCategoryMeta.icon;
+
   const handleChange = (e, newValue) => setValue(newValue);
 
-  /* ========= JSX ========= */
   return (
     <div
       className="md:px-[10%] px-[5%] w-full sm:mt-0 mt-[3rem] bg-[#030014] overflow-hidden"
@@ -361,7 +506,7 @@ export default function FullWidthTabs() {
       </div>
 
       <Box sx={{ width: "100%" }}>
-        {/* Tabs */}
+        {/* Main Tabs */}
         <AppBar
           position="static"
           elevation={0}
@@ -484,9 +629,7 @@ export default function FullWidthTabs() {
                 </div>
 
                 <p className="max-w-2xl text-sm md:text-base text-slate-400">
-                  {activeProjectCategory === "robotics"
-                    ? "Robotics, embedded systems, automation, and smart-device projects."
-                    : "Artificial intelligence, machine learning, and intelligent systems projects."}
+                  {activeCategoryMeta.description}
                 </p>
               </div>
 
@@ -513,15 +656,13 @@ export default function FullWidthTabs() {
               ) : (
                 <div className="mx-auto mt-6 max-w-2xl rounded-3xl border border-white/10 bg-white/5 px-6 py-10 text-center backdrop-blur-md">
                   <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/20 to-blue-500/20 text-violet-300">
-                    <BrainCircuit className="h-7 w-7" />
+                    <EmptyIcon className="h-7 w-7" />
                   </div>
                   <h3 className="text-xl font-semibold text-white">
-                    AI projects coming soon
+                    {activeCategoryMeta.emptyTitle}
                   </h3>
                   <p className="mt-2 text-slate-400">
-                    This section is ready. Add any future AI project with
-                    <span className="mx-1 text-slate-200">category: "ai"</span>
-                    and it will appear here automatically.
+                    {activeCategoryMeta.emptyText}
                   </p>
                 </div>
               )}
