@@ -297,7 +297,7 @@ const localProjects = [
     category: "robotics",
   },
   {
-    id: 6,
+    id: 9,
     Img: asset("projects/smartbasin.png"),
     Title: "Smart Basin",
     Description:
@@ -326,7 +326,7 @@ const localProjects = [
     badge: "Web3",
   },
   {
-  id: 9,
+  id: 6,
   Img: asset("projects/smart-helmet.png"),
   Title: "Safeguard Fall & ADL Detection",
   Description:
@@ -345,7 +345,7 @@ const localFallbackCertificates = [
   { Img: asset("certificates/CCGcertificate.jpg"), Title: "Certificate 4" },
   { Img: asset("certificates/gdg.jpg"), Title: "Certificate 5" },
   { Img: asset("certificates/ieee.jpg"), Title: "Certificate 6" },
-  
+
 ];
 
 /* ========= Component ========= */
