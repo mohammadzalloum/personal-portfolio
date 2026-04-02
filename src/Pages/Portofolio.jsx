@@ -1,3 +1,4 @@
+// src/Pages/Portofolio.jsx
 import React, { useEffect, useState, useCallback } from "react";
 import { supabase } from "../supabase";
 import PropTypes from "prop-types";
@@ -14,7 +15,9 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Certificate from "../components/Certificate";
 import { Code, Award, Boxes } from "lucide-react";
+import { asset } from "../utils/asset.js";
 
+/* ========= Helpers ========= */
 const ToggleButton = ({ onClick, isShowingMore }) => (
   <button
     onClick={onClick}
@@ -22,18 +25,36 @@ const ToggleButton = ({ onClick, isShowingMore }) => (
   >
     <span className="relative z-10 flex items-center gap-2">
       {isShowingMore ? "See Less" : "See More"}
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-        className={`transition-transform duration-300 ${isShowingMore ? "group-hover:-translate-y-0.5" : "group-hover:translate-y-0.5"}`}>
-        <polyline points={isShowingMore ? "18 15 12 9 6 15" : "6 9 12 15 18 9"}></polyline>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={`transition-transform duration-300 ${
+          isShowingMore ? "group-hover:-translate-y-0.5" : "group-hover:translate-y-0.5"
+        }`}
+      >
+        <polyline points={isShowingMore ? "18 15 12 9 6 15" : "6 9 12 15 18 9"} />
       </svg>
     </span>
-    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-500/50 transition-all duration-300 group-hover:w-full"></span>
+    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-500/50 transition-all duration-300 group-hover:w-full" />
   </button>
 );
 
 function TabPanel({ children, value, index, ...other }) {
   return (
-    <div role="tabpanel" hidden={value !== index} id={`full-width-tabpanel-${index}`} aria-labelledby={`full-width-tab-${index}`} {...other}>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`full-width-tabpanel-${index}`}
+      aria-labelledby={`full-width-tab-${index}`}
+      {...other}
+    >
       {value === index && (
         <Box sx={{ p: { xs: 1, sm: 3 } }}>
           <Typography component="div">{children}</Typography>
@@ -42,47 +63,134 @@ function TabPanel({ children, value, index, ...other }) {
     </div>
   );
 }
-TabPanel.propTypes = { children: PropTypes.node, index: PropTypes.number.isRequired, value: PropTypes.number.isRequired };
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
 
 function a11yProps(index) {
-  return { id: `full-width-tab-${index}`, "aria-controls": `full-width-tabpanel-${index}` };
+  return {
+    id: `full-width-tab-${index}`,
+    "aria-controls": `full-width-tabpanel-${index}`,
+  };
 }
 
 const encodeLocal = (p) => (p ? encodeURI(p) : p);
 
+/* ========= Static Data ========= */
+// Tech stack
 const techStacks = [
-  { icon: "Python.png", language: "Python" },
-  { icon: "c++.png", language: "C++" },
-  { icon: "c.png", language: "C" },
-  { icon: "html.svg", language: "HTML" },
-  { icon: "css.svg", language: "CSS" },
-  { icon: "ros2.png", language: "ROS2" },
-  { icon: "linux.png", language: "Linux" },
-  { icon: "pych.png", language: "PyCharm" },
-  { icon: "arduino.png", language: "Arduino" },
-  { icon: "solidwork.png", language: "SolidWork" },
-  { icon: "cr.png", language: "CirkitDesigner" },
-  { icon: "tablue.png", language: "Tableau" },
+  { icon: asset("Python.png"),    language: "Python" },
+  { icon: asset("c++.png"),       language: "C++" },
+  { icon: asset("c.png"),         language: "C" },
+  { icon: asset("html.svg"),      language: "HTML" },
+  { icon: asset("css.svg"),       language: "CSS" },
+  { icon: asset("ros2.png"),      language: "ROS2" },
+  { icon: asset("linux.png"),     language: "Linux" },
+  { icon: asset("pych.png"),      language: "PyCharm" },
+  { icon: asset("arduino.png"),   language: "Arduino" },
+  { icon: asset("solidwork.png"), language: "SolidWork" },
+  { icon: asset("cr.png"),        language: "CirkitDesigner" },
+  { icon: asset("tablue.png"),    language: "Tableau" },
 ];
 
+// Local fallback projects (تأكد من وجود الصور داخل public/*)
+const localProjects = [
+  {
+    id: 1,
+    Img: asset("projects/fire.png"),
+    Title: "Fire Fighting Robot",
+    Description:
+      "This is a fire-fighting robot designed to detect and respond to both fire and gas leaks. It integrates a 6 DOF robotic arm and various sensors, and can be fully controlled via a mobile application using the ESP32 microcontroller.",
+    Link: "https://github.com/mohammadzalloum/Fier-Fihting-Robot",
+  },
+  {
+    id: 2,
+    Img: asset("projects/farm.png"),
+    Title: "f-tobot",
+    Description:
+      "This is an autonomous agricultural scout robot designed to navigate farmlands, perform planting and watering tasks, and monitor environmental conditions. It integrates environmental sensors, a high-resolution camera, front-facing LED lights, and can be fully controlled via a mobile application through Bluetooth.",
+    Link: "https://github.com/mohammadzalloum/F-Robot",
+  },
+  {
+    id: 3,
+    Img: asset("projects/sumorobot.png"), // public/projects/SumoRobot.png
+    Title: "Sumo Robot",
+    Description:
+      "Competitive Sumo robot featuring 5 tactical modes—optimized for charge attacks, evasive turns, ring awareness, and rapid repositioning",
+    Link: "https://github.com/mohammadzalloum/Sumo-Robot",
+  },
+  {
+    id: 4,
+    Img: asset("projects/line.jpg"),
+    Title: "Line Following Robot",
+    Description:
+      "A Line-Following Robot designed to detect and follow black lines on a white surface using a reflectance sensor array and controlled via an ESP32 microcontroller.",
+    Link: "https://github.com/mohammadzalloum/Line-Following-Robot",
+  },
+  {
+    id: 5,
+    Img: asset("projects/smartbasin.png"),
+    Title: "Smart Basin",
+    Description:
+      "Touchless, sensor-driven basin with microcontroller control and fail-safe logic for hygiene and water efficiency.",
+    Link: "https://github.com/mohammadzalloum/Smart-Basin",
+  },
+  {
+    id: 6,
+    Img: asset("projects/smart-helmet.png"),
+    Title: "Smart Helmet",
+    Description:
+      "Safety helmet with sensors and microcontroller logic for live monitoring and alerts.",
+    Link: "https://github.com/mohammadzalloum/Safeguard-Fall-ADL-TCN",
+    badge: "In Progress",
+  },
+  {
+    id: 7,
+    Img: asset("projects/smarthome.png"),
+    Title: "Smart home model",
+    Description:
+      "A C++-powered, modular home-automation prototype for real-time monitoring and control of lighting, climate, and security.",
+    Link: "https://github.com/mohammadzalloum/Smart-home-model",
+  }
+];
+
+// Local fallback certificates
+const localFallbackCertificates = [
+  { Img: asset("certificates/corrleationone.jpg"), Title: "Certificate 1" },
+  { Img: asset("certificates/htux.jpg"),           Title: "Certificate 2" },
+  { Img: asset("certificates/poust.jpg"),          Title: "Certificate 3" },
+  { Img: asset("certificates/CCGcertificate.jpg"), Title: "Certificate 4" },
+  { Img: asset("certificates/gdg.jpg"),            Title: "Certificate 5" },
+  { Img: asset("certificates/ieee.jpg"),           Title: "Certificate 6" },
+];
+
+/* ========= Component ========= */
 export default function FullWidthTabs() {
   const theme = useTheme();
   const [value, setValue] = useState(0);
+
   const [projects, setProjects] = useState([]);
   const [certificates, setCertificates] = useState([]);
-  const [showAllProjects, setShowAllProjects] = useState(false);
+
+  // Only keep "See more" for certificates
   const [showAllCertificates, setShowAllCertificates] = useState(false);
 
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    const check = () => { if (typeof window !== "undefined") setIsMobile(window.innerWidth < 768); };
-    check(); window.addEventListener("resize", check);
+    const check = () => {
+      if (typeof window !== "undefined") setIsMobile(window.innerWidth < 768);
+    };
+    check();
+    window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
-  const initialProjectItems = isMobile ? 2 : 4;  // 2×2 على الديسكتوب
-  const initialCertItems   = isMobile ? 4 : 6;
+  const initialCertItems = isMobile ? 4 : 6;
 
-  useEffect(() => { AOS.init({ once: false }); }, []);
+  useEffect(() => {
+    AOS.init({ once: false });
+  }, []);
 
   const fetchData = useCallback(async () => {
     try {
@@ -90,12 +198,16 @@ export default function FullWidthTabs() {
         supabase.from("projects").select("*").order("id", { ascending: true }),
         supabase.from("certificates").select("*").order("id", { ascending: true }),
       ]);
+
       if (projectsResponse.error) throw projectsResponse.error;
       if (certificatesResponse.error) throw certificatesResponse.error;
 
       const projectData = projectsResponse.data || [];
       const certificateData = certificatesResponse.data || [];
-      setProjects(projectData); setCertificates(certificateData);
+
+      setProjects(projectData);
+      setCertificates(certificateData);
+
       localStorage.setItem("projects", JSON.stringify(projectData));
       localStorage.setItem("certificates", JSON.stringify(certificateData));
     } catch (error) {
@@ -106,82 +218,130 @@ export default function FullWidthTabs() {
   useEffect(() => {
     const cp = localStorage.getItem("projects");
     const cc = localStorage.getItem("certificates");
-    if (cp && cc) { setProjects(JSON.parse(cp)); setCertificates(JSON.parse(cc)); }
+    if (cp && cc) {
+      setProjects(JSON.parse(cp));
+      setCertificates(JSON.parse(cc));
+    }
     fetchData();
   }, [fetchData]);
 
-  // Fallback محلي للمشاريع
-  const localProjects = [
-    { Img: "/projects/fire.png",        Title: "Fire-Fighting Robot",     Description: "This is a fire-fighting robot designed to detect and respond to both fire and gas leaks. It integrates a 6 DOF robotic arm and various sensors, and can be fully controlled via a mobile application using the ESP32 microcontroller.", Link: "https://github.com/mohammadzalloum/Fier-Fihting-Robot" },
-    { Img: "/projects/farm.png",  Title: "f-tobot",      Description: "This is an autonomous agricultural scout robot designed to navigate farmlands, perform planting and watering tasks, and monitor environmental conditions. It integrates environmental sensors, a high-resolution camera, front-facing LED lights, and can be fully controlled via a mobile application through Bluetooth.",   Link: "https://github.com/mohammadzalloum/F-Robot" },
-    { Img: "/projects/line.jpg",      Title: "Line-Following Robot",          Description: "A Line-Following Robot designed to detect and follow black lines on a white surface using a reflectance sensor array and controlled via an ESP32 microcontroller. This project demonstrates the fundamentals of robotics, embedded systems, and sensor-based navigation.",          Link: "https://github.com/mohammadzalloum/Line-Following-Robot" },
-    { Img: "/projects/test.png", Title: "Smart-home-model", Description: "Smart-home-model",      Link: "https://github.com/mohammadzalloum/Smart-home-model" },
+  /* ====== Normalize & Merge ====== */
+  // دمج نتائج Supabase مع المحلية بحيث لا نفقد العناصر اليدوية (مثل Sumo Robot)
+  const mergedProjects = (projects?.length ? projects : []);
+  const rawProjects = [
+    ...mergedProjects,
+    ...localProjects.filter(lp =>
+      !mergedProjects.some(rp =>
+        String(rp.id ?? rp.Title ?? "").toLowerCase() === String(lp.id ?? lp.Title ?? "").toLowerCase()
+      )
+    ),
   ];
 
-  const rawProjects = projects?.length ? projects : localProjects;
   const normalizedProjects = rawProjects.map((p, i) => ({
     id: p.id ?? i,
     Img: encodeLocal(p.Img || p.image || p.thumbnail || p.cover || p.url || p.path),
     Title: p.Title || p.title || `Project ${i + 1}`,
     Description: p.Description || p.description || "",
     Link: p.Link || p.link || p.demo || p.demoUrl || "#",
+    badge: p.badge || p.Badge || undefined,
   }));
-  const displayedProjectsFixed = showAllProjects ? normalizedProjects : normalizedProjects.slice(0, initialProjectItems);
 
-  // شهادات (fallback)
-  const localFallbackCertificates = [
-    { Img: encodeLocal("/certificates/corrleationone.jpg"), Title: "Certificate 1" },
-    { Img: encodeLocal("/certificates/htux.jpg"),           Title: "Certificate 2" },
-    { Img: encodeLocal("/certificates/poust.jpg"),          Title: "Certificate 3" },
-    { Img: encodeLocal("/certificates/CCGcertificate.jpg"), Title: "Certificate 4" },
-    { Img: encodeLocal("/certificates/gdg.jpg"), Title: "Certificate 5" },
-  ];
+  // Show all projects
+  const displayedProjectsFixed = normalizedProjects;
+
   const rawCertificates = certificates?.length ? certificates : localFallbackCertificates;
   const normalizedCertificates = rawCertificates.map((c, i) => ({
     id: c.id ?? i,
     Img: encodeLocal(c.Img || c.ImgSertif || c.image || c.url || c.path),
     Title: c.Title || c.title || `Certificate ${i + 1}`,
   }));
-  const displayedCertificatesFixed = showAllCertificates ? normalizedCertificates : normalizedCertificates.slice(0, initialCertItems);
+
+  const displayedCertificatesFixed = showAllCertificates
+    ? normalizedCertificates
+    : normalizedCertificates.slice(0, initialCertItems);
 
   const handleChange = (e, newValue) => setValue(newValue);
 
+  /* ========= JSX ========= */
   return (
     <div className="md:px-[10%] px-[5%] w-full sm:mt-0 mt-[3rem] bg-[#030014] overflow-hidden" id="Portofolio">
-      {/* العنوان */}
+      {/* Heading */}
       <div className="text-center pb-10" data-aos="fade-up" data-aos-duration="1000">
         <h2 className="inline-block text-3xl md:text-5xl font-bold text-center mx-auto text-transparent bg-clip-text bg-gradient-to-r from-[#6366f1] to-[#a855f7]">
-          <span style={{ color: "#6366f1", backgroundImage: "linear-gradient(45deg, #6366f1 10%, #a855f7 93%)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+          <span
+            style={{
+              color: "#6366f1",
+              backgroundImage: "linear-gradient(45deg, #6366f1 10%, #a855f7 93%)",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
             Portfolio Showcase
           </span>
         </h2>
         <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-base mt-2">
-          Discover my journey as a developer through hands-on projects, certifications, and the technologies I've mastered.
+          Discover my journey as a developer through projects, certifications, and the technologies I've mastered.
         </p>
       </div>
 
       <Box sx={{ width: "100%" }}>
         {/* Tabs */}
-        <AppBar position="static" elevation={0}
+        <AppBar
+          position="static"
+          elevation={0}
           sx={{
-            bgcolor: "transparent", border: "1px solid rgba(255, 255, 255, 0.1)", borderRadius: "20px",
-            position: "relative", overflow: "hidden",
-            "&::before": { content: '""', position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(139,92,246,.03) 0%, rgba(59,130,246,.03) 100%)", backdropFilter: "blur(10px)", zIndex: 0 },
+            bgcolor: "transparent",
+            border: "1px solid rgba(255, 255, 255, 0.1)",
+            borderRadius: "20px",
+            position: "relative",
+            overflow: "hidden",
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(180deg, rgba(139,92,246,.03) 0%, rgba(59,130,246,.03) 100%)",
+              backdropFilter: "blur(10px)",
+              zIndex: 0,
+            },
           }}
           className="md:px-4"
         >
-          <Tabs value={value} onChange={handleChange} textColor="secondary" indicatorColor="secondary" variant="fullWidth"
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            textColor="secondary"
+            indicatorColor="secondary"
+            variant="fullWidth"
             sx={{
               minHeight: "70px",
               "& .MuiTab-root": {
-                fontSize: { xs: "0.9rem", md: "1rem" }, fontWeight: "600", color: "#94a3b8",
-                textTransform: "none", transition: "all .4s cubic-bezier(.4,0,.2,1)", padding: "20px 0",
-                zIndex: 1, margin: "8px", borderRadius: "12px",
-                "&:hover": { color: "#fff", backgroundColor: "rgba(139,92,246,.1)", transform: "translateY(-2px)", "& .lucide": { transform: "scale(1.1) rotate(5deg)" } },
-                "&.Mui-selected": { color: "#fff", background: "linear-gradient(135deg, rgba(139,92,246,.2), rgba(59,130,246,.2))", boxShadow: "0 4px 15px -3px rgba(139,92,246,.2)", "& .lucide": { color: "#a78bfa" } },
+                fontSize: { xs: "0.9rem", md: "1rem" },
+                fontWeight: "600",
+                color: "#94a3b8",
+                textTransform: "none",
+                transition: "all .4s cubic-bezier(.4,0,.2,1)",
+                padding: "20px 0",
+                zIndex: 1,
+                margin: "8px",
+                borderRadius: "12px",
+                "&:hover": {
+                  color: "#fff",
+                  backgroundColor: "rgba(139,92,246,.1)",
+                  transform: "translateY(-2px)",
+                  "& .lucide": { transform: "scale(1.1) rotate(5deg)" },
+                },
+                "&.Mui-selected": {
+                  color: "#fff",
+                  background: "linear-gradient(135deg, rgba(139,92,246,.2), rgba(59,130,246,.2))",
+                  boxShadow: "0 4px 15px -3px rgba(139,92,246,.2)",
+                  "& .lucide": { color: "#a78bfa" },
+                },
               },
-              "& .MuiTabs-indicator": { height: 0 }, "& .MuiTabs-flexContainer": { gap: "8px" },
-            }}>
+              "& .MuiTabs-indicator": { height: 0 },
+              "& .MuiTabs-flexContainer": { gap: "8px" },
+            }}
+          >
             <Tab icon={<Code className="mb-2 w-5 h-5 transition-all duration-300" />} label="Projects" {...a11yProps(0)} />
             <Tab icon={<Award className="mb-2 w-5 h-5 transition-all duration-300" />} label="Certificates" {...a11yProps(1)} />
             <Tab icon={<Boxes className="mb-2 w-5 h-5 transition-all duration-300" />} label="Tech Stack" {...a11yProps(2)} />
@@ -189,25 +349,27 @@ export default function FullWidthTabs() {
         </AppBar>
 
         <SwipeableViews axis={theme.direction === "rtl" ? "x-reverse" : "x"} index={value} onChangeIndex={setValue}>
-          {/* Projects: 2×2 مع كروت أكبر (+19px ارتفاع) */}
+          {/* Projects – all visible */}
           <TabPanel value={value} index={0} dir={theme.direction}>
             <div className="container mx-auto flex justify-center items-center overflow-hidden">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-screen-2xl w-full">
                 {displayedProjectsFixed.map((project, idx) => (
-                  <div key={project.id || idx}
-                       data-aos={idx % 2 === 0 ? "fade-up-right" : "fade-up-left"}
-                       data-aos-duration={idx % 2 === 0 ? "1000" : "1200"}>
-                    <CardProject Img={project.Img} Title={project.Title} Description={project.Description} Link={project.Link} />
+                  <div
+                    key={project.id ?? idx}
+                    data-aos={idx % 2 === 0 ? "fade-up-right" : "fade-up-left"}
+                    data-aos-duration={idx % 2 === 0 ? "1000" : "1200"}
+                  >
+                    <CardProject
+                      Img={project.Img}
+                      Title={project.Title}
+                      Description={project.Description}
+                      Link={project.Link}
+                      badge={project.badge}
+                    />
                   </div>
                 ))}
               </div>
             </div>
-
-            {normalizedProjects.length > initialProjectItems && (
-              <div className="mt-6 w-full flex justify-start">
-                <ToggleButton onClick={() => setShowAllProjects((v) => !v)} isShowingMore={showAllProjects} />
-              </div>
-            )}
           </TabPanel>
 
           {/* Certificates */}
@@ -215,14 +377,17 @@ export default function FullWidthTabs() {
             <div className="container mx-auto flex justify-center items-center overflow-hidden">
               <div className="grid grid-cols-1 md:grid-cols-3 md:gap-5 gap-4">
                 {displayedCertificatesFixed.map((certificate, index) => (
-                  <div key={certificate.id || index}
-                       data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
-                       data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}>
+                  <div
+                    key={certificate.id ?? index}
+                    data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
+                    data-aos-duration={index % 3 === 0 ? "1000" : index % 3 === 1 ? "1200" : "1000"}
+                  >
                     <Certificate ImgSertif={certificate.Img} />
                   </div>
                 ))}
               </div>
             </div>
+
             {normalizedCertificates.length > initialCertItems && (
               <div className="mt-6 w-full flex justify-start">
                 <ToggleButton onClick={() => setShowAllCertificates((v) => !v)} isShowingMore={showAllCertificates} />
@@ -235,10 +400,15 @@ export default function FullWidthTabs() {
             <div className="container mx-auto flex justify-center items-center overflow-hidden pb-[5%]">
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 lg:gap-8 gap-5">
                 {techStacks.map((stack, index) => (
-                  <div key={index}
-                       data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
-                       data-aos-duration={index % 3 === 0 ? "1000" : "1200" }>
-                    <TechStackIcon TechStackIcon={stack.icon} Language={stack.language} />
+                  <div
+                    key={index}
+                    data-aos={index % 3 === 0 ? "fade-up-right" : index % 3 === 1 ? "fade-up" : "fade-up-left"}
+                    data-aos-duration={index % 3 === 0 ? "1000" : "1200"}
+                  >
+                    <TechStackIcon
+                      TechStackIcon={stack.icon}
+                      Language={stack.language}
+                    />
                   </div>
                 ))}
               </div>

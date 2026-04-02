@@ -1,13 +1,16 @@
-import React from 'react';
-import { Home, ArrowLeft } from 'lucide-react';
+import React from "react";
+import { Home, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function NotFoundPage() {
+  const navigate = useNavigate();
+
   const handleGoBack = () => {
-    window.history.back();
+    navigate(-1); // خطوة للخلف
   };
 
   const handleGoHome = () => {
-    window.location.href = '/';
+    navigate("/"); // على HashRouter = ينتقل لـ #/
   };
 
   return (

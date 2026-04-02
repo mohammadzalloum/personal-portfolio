@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { Share2, User, Mail, MessageSquare, Send } from "lucide-react";
-import { Link } from "react-router-dom";
 import SocialLinks from "../components/SocialLinks";
 import Komentar from "../components/Commentar";
 import Swal from "sweetalert2";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ContactPage = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -22,10 +20,7 @@ const ContactPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -40,7 +35,8 @@ const ContactPage = () => {
     });
 
     try {
-      const formSubmitUrl = "https://formsubmit.co/yanishverma77@gmail.com";
+      // ✅ بدّلنا للإيميل تبعك على FormSubmit
+      const formSubmitUrl = "https://formsubmit.co/mohammad.zalloum098@gmail.com";
 
       const submitData = new FormData();
       submitData.append("name", formData.name);
@@ -49,32 +45,36 @@ const ContactPage = () => {
       submitData.append("_subject", "New Message from Portfolio Website");
       submitData.append("_captcha", "false");
       submitData.append("_template", "table");
+      // ملاحظة: _next لا يعمل دائماً مع XHR؛ لذلك نستخدم navigate بعد النجاح.
 
       await axios.post(formSubmitUrl, submitData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      Swal.fire({
+      await Swal.fire({
         title: "Success!",
         text: "Your message was sent successfully!",
         icon: "success",
         confirmButtonColor: "#6366f1",
-        timer: 2000,
+        timer: 1200,
         timerProgressBar: true,
       });
 
       setFormData({ name: "", email: "", message: "" });
+      navigate("/thank-you");
     } catch (error) {
+      // بعض المتصفحات/الإضافات قد تمنع الرد (status 0) رغم وصول الرسالة
       if (error.request && error.request.status === 0) {
-        Swal.fire({
+        await Swal.fire({
           title: "Success!",
           text: "Your message was sent successfully!",
           icon: "success",
           confirmButtonColor: "#6366f1",
-          timer: 2000,
+          timer: 1200,
           timerProgressBar: true,
         });
         setFormData({ name: "", email: "", message: "" });
+        navigate("/thank-you");
       } else {
         Swal.fire({
           title: "Failed!",
@@ -117,11 +117,9 @@ const ContactPage = () => {
         </p>
       </div>
 
-      <div
-        className="h-auto py-10 flex items-center justify-center 2xl:pr-[3.1%] lg:pr-[3.8%] md:px-0"
-        id="Contact"
-      >
+      <div className="h-auto py-10 flex items-center justify-center 2xl:pr-[3.1%] lg:pr-[3.8%] md:px-0" id="Contact">
         <div className="container px-[1%] grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-[45%_55%] 2xl:grid-cols-[35%_65%] gap-12">
+          {/* Left: Form */}
           <div className="bg-white/5 backdrop-blur-xl rounded-3xl shadow-2xl p-5 py-10 sm:p-10 transition-all duration-500 hover:shadow-[#6366f1]/10">
             <div className="flex justify-between items-start mb-8">
               <div>
@@ -149,6 +147,7 @@ const ContactPage = () => {
                   required
                 />
               </div>
+
               <div data-aos="fade-up" data-aos-delay="200" className="relative group">
                 <Mail className="absolute left-4 top-4 w-5 h-5 text-gray-400" />
                 <input
@@ -162,6 +161,7 @@ const ContactPage = () => {
                   required
                 />
               </div>
+
               <div data-aos="fade-up" data-aos-delay="300" className="relative group">
                 <MessageSquare className="absolute left-4 top-4 w-5 h-5 text-gray-400" />
                 <textarea
@@ -174,6 +174,7 @@ const ContactPage = () => {
                   required
                 />
               </div>
+
               <button
                 data-aos="fade-up"
                 data-aos-delay="400"
@@ -191,6 +192,7 @@ const ContactPage = () => {
             </div>
           </div>
 
+          {/* Right: Comments / Testimonials */}
           <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-3 py-3 md:p-10 md:py-8 shadow-2xl">
             <Komentar />
           </div>
