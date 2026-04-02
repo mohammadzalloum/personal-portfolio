@@ -250,16 +250,14 @@ const Home = () => {
                 ></div>
 
                 <div
-                  className={`relative z-10 w-[78%] sm:w-[68%] lg:w-[72%] max-w-[520px] mx-auto opacity-90 transform transition-transform duration-500 ${
-                    isHovering ? "scale-105" : "scale-100"
+                  className={`relative z-10 w-[72%] sm:w-[62%] lg:w-[65%] max-w-[420px] mx-auto opacity-90 transform transition-transform duration-500 ${
+                    isHovering ? "scale-102" : "scale-100"
                   }`}
                 >
                   <img
                     src={codingGifSrc}
                     alt="Coding animation"
-                    className={`w-full h-auto object-contain transition-all duration-500 ${
-                      isHovering ? "scale-[1.03]" : "scale-100"
-                    }`}
+                    className="w-full h-auto object-contain"
                     loading="eager"
                   />
                 </div>
