@@ -280,6 +280,15 @@ const localProjects = [
   },
   {
     id: 4,
+    Img: asset("projects/prix.jpg"),
+    Title: "Parkly",
+    Description:
+      "A smart parking system that automates vehicle access using NFC, tracks parking availability in real time with IR sensors, and supports mobile-based reservations, admin monitoring, and EV charging management through an ESP32 controller.",
+    Link: "https://github.com/mohammadzalloum/prakly",
+    category: "robotics",
+  },
+  {
+    id: 5,
     Img: asset("projects/line.jpg"),
     Title: "Line Following Robot",
     Description:
@@ -288,7 +297,7 @@ const localProjects = [
     category: "robotics",
   },
   {
-    id: 5,
+    id: 6,
     Img: asset("projects/smartbasin.png"),
     Title: "Smart Basin",
     Description:
@@ -296,19 +305,18 @@ const localProjects = [
     Link: "https://github.com/mohammadzalloum/Smart-Basin",
     category: "robotics",
   },
-  {
-    id: 6,
-    Img: asset("projects/smart-helmet.png"),
-    Title: "Smart Helmet",
-    Description:
-      "Safety helmet with sensors and microcontroller logic for live monitoring and alerts.",
-    Link: "https://github.com/mohammadzalloum/Safeguard-Fall-ADL-TCN",
-    badge: "In Progress",
-    category: "robotics",
-  },
 
   {
     id: 7,
+    Img: asset("projects/smarthome.png"),
+    Title: "Smart home model",
+    Description:
+      "A C++-powered, modular home-automation prototype for real-time monitoring and control of lighting, climate, and security.",
+    Link: "https://github.com/mohammadzalloum/Smart-home-model",
+    category: "robotics",
+  },
+  {
+    id: 8,
     Img: blockchainProjectPlaceholder,
     Title: "BRIX Fractional Real Estate",
     Description:
@@ -318,7 +326,7 @@ const localProjects = [
     badge: "Web3",
   },
   {
-  id: 8,
+  id: 9,
   Img: asset("projects/smart-helmet.png"),
   Title: "Safeguard Fall & ADL Detection",
   Description:
@@ -326,7 +334,7 @@ const localProjects = [
   Link: "https://github.com/mohammadzalloum/Safeguard-Fall-ADL-TCN",
   badge: "AI",
   category: "ai",
-}
+},
 ];
 
 // Local fallback certificates
@@ -337,6 +345,7 @@ const localFallbackCertificates = [
   { Img: asset("certificates/CCGcertificate.jpg"), Title: "Certificate 4" },
   { Img: asset("certificates/gdg.jpg"), Title: "Certificate 5" },
   { Img: asset("certificates/ieee.jpg"), Title: "Certificate 6" },
+  
 ];
 
 /* ========= Component ========= */
