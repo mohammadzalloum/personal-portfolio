@@ -306,17 +306,9 @@ const localProjects = [
     badge: "In Progress",
     category: "robotics",
   },
+
   {
     id: 7,
-    Img: asset("projects/smarthome.png"),
-    Title: "Smart home model",
-    Description:
-      "A C++-powered, modular home-automation prototype for real-time monitoring and control of lighting, climate, and security.",
-    Link: "https://github.com/mohammadzalloum/Smart-home-model",
-    category: "robotics",
-  },
-  {
-    id: 8,
     Img: blockchainProjectPlaceholder,
     Title: "BRIX Fractional Real Estate",
     Description:
@@ -326,7 +318,7 @@ const localProjects = [
     badge: "Web3",
   },
   {
-  id: 9,
+  id: 8,
   Img: asset("projects/smart-helmet.png"),
   Title: "Safeguard Fall & ADL Detection",
   Description:
