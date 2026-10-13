@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { ArrowRight, Github } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const CardProject = ({ Img, Title, Subtitle, Description, Link: ProjectLink, badge, TechStack, ImageAlt, imageCaption, detailPath }) => {
+const CardProject = ({ Img, Title, Subtitle, Description, Link: ProjectLink, badge, TechStack, ImageAlt, detailPath }) => {
   const handleDetails = (e) => {
     if (!ProjectLink) {
       e.preventDefault();
@@ -37,7 +37,6 @@ const CardProject = ({ Img, Title, Subtitle, Description, Link: ProjectLink, bad
               className={`${detailPath ? "w-full aspect-video object-contain" : "w-full h-full object-cover"} transform group-hover:scale-105 transition-transform duration-500`}
               loading="lazy"
             />
-            {imageCaption && <span className="absolute bottom-2 right-2 rounded bg-slate-950/80 px-2 py-1 text-[10px] text-slate-200">{imageCaption}</span>}
           </div>
 
           {/* Info */}
@@ -98,7 +97,6 @@ CardProject.propTypes = {
   badge: PropTypes.string,
   TechStack: PropTypes.arrayOf(PropTypes.string),
   ImageAlt: PropTypes.string,
-  imageCaption: PropTypes.string,
   detailPath: PropTypes.string,
 };
 

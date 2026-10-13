@@ -28,6 +28,14 @@ export const isSafeguardProject = (project) => {
       (title.includes("fall") || title.includes("helmet")));
 };
 
+export const isMoodLensProject = (project) => {
+  const title = projectTitle(project);
+  return projectLink(project).includes("/03-sentiment%20analysis%20%26%20classification%20evaluation") ||
+    title === "sentiment analysis" ||
+    title.startsWith("sentiment analysis & classification") ||
+    title.startsWith("moodlens");
+};
+
 export const isSameProject = (left, right) => {
   const leftLink = projectLink(left);
   const rightLink = projectLink(right);
@@ -37,8 +45,9 @@ export const isSameProject = (left, right) => {
   const rightTitle = projectTitle(right);
   if (leftTitle && leftTitle === rightTitle) return true;
 
-  // Match the earlier Safeguard card even if a remote row lacks its source URL.
-  return isSafeguardProject(left) && isSafeguardProject(right);
+  // Match renamed local projects even when an older remote row lacks its source URL.
+  return (isSafeguardProject(left) && isSafeguardProject(right)) ||
+    (isMoodLensProject(left) && isMoodLensProject(right));
 };
 
 export const mergeProjectCatalog = (prioritized, remote, local) => {

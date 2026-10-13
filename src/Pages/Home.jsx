@@ -184,7 +184,7 @@ const Home = () => {
                   data-aos="fade-up"
                   data-aos-delay="1000"
                 >
-                  I’m Mohammad Zalloum, an AI Engineer and Robotics Developer based in Amman, Jordan, with a B.Sc. in Artificial Intelligence. I build AI applications that turn data into useful decisions, with experience in retrieval-augmented generation, knowledge graphs, predictive modeling, and real-time activity detection. My projects span the full workflow, from preparing data and evaluating models to building APIs and interfaces people can use. I also bring AI into physical systems through robotics and embedded development with ESP32 and Arduino.
+                  I’m Mohammad Zalloum, an AI Engineer and Robotics Developer based in Amman, Jordan, with a B.Sc. in Artificial Intelligence. I specialize in building end-to-end AI solutions, including RAG, knowledge graphs, predictive modeling, and real-time detection, with experience in API development, robotics, and embedded systems.
                 </p>
 
                 <div

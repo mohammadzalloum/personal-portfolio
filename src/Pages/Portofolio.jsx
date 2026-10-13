@@ -580,7 +580,6 @@ export default function FullWidthTabs({ onProjectCountChange }) {
                           Subtitle={project.Subtitle}
                           TechStack={project.TechStack}
                           ImageAlt={project.ImageAlt}
-                          imageCaption={project.ImageCaption}
                           detailPath={aiProjects.some((entry) => entry.id === project.id) ? `/project/${project.id}` : undefined}
                         />
                       </div>

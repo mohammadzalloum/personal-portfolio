@@ -41,7 +41,6 @@ export default function AiProjectDetail() {
           </div>
           <figure className="self-start overflow-hidden rounded-2xl border border-white/10 bg-slate-900/50">
             <img src={project.Img} alt={project.ImageAlt} className="h-auto w-full object-contain" />
-            <figcaption className="px-4 py-3 text-xs leading-relaxed text-slate-400">{project.ImageNote}</figcaption>
           </figure>
         </div>
 

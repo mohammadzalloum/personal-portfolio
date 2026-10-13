@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import Swal from 'sweetalert2';
 import NotFoundPage from "../Pages/404.jsx";
-import { isBlockchainProject, isSafeguardProject } from "../utils/projectCatalog.js";
+import { isBlockchainProject, isMoodLensProject, isSafeguardProject } from "../utils/projectCatalog.js";
 
 const TECH_ICONS = {
   React: Globe,
@@ -109,6 +109,10 @@ const ProjectDetails = () => {
     const selectedProject = storedProjects.find((p) => String(p.id) === id);
     if (selectedProject && isSafeguardProject(selectedProject)) {
       navigate("/project/safeguard-smart-helmet", { replace: true });
+      return;
+    }
+    if (selectedProject && isMoodLensProject(selectedProject)) {
+      navigate("/project/sentiment-analysis", { replace: true });
       return;
     }
     
