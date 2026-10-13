@@ -99,7 +99,6 @@ const Home = () => {
   const [wordIndex, setWordIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
 
   const codingGifSrc = `${import.meta.env.BASE_URL}Coding.gif`;
 
@@ -159,9 +158,9 @@ const Home = () => {
         }`}
       >
         <div className="container mx-auto min-h-screen">
-          <div className="flex flex-col lg:flex-row items-center justify-center h-screen md:justify-between gap-0 sm:gap-12 lg:gap-20">
+          <div className="flex min-h-screen flex-col items-center justify-center gap-10 py-24 sm:gap-12 sm:py-28 lg:flex-row lg:gap-16 lg:py-16">
             <div
-              className="w-full lg:w-1/2 space-y-6 sm:space-y-8 text-left lg:text-left order-1 lg:order-1 lg:mt-0"
+              className="order-1 w-full min-w-0 space-y-6 text-left sm:space-y-8 lg:w-3/5"
               data-aos="fade-right"
               data-aos-delay="200"
             >
@@ -185,15 +184,7 @@ const Home = () => {
                   data-aos="fade-up"
                   data-aos-delay="1000"
                 >
-                  My name is Mohammad Zalloum, an AI Engineering & Robotics
-                  engineer based in Amman, Jordan. I recently completed my B.Sc.
-                  in Artificial Intelligence and I’m passionate about building
-                  end-to-end AI/ML and embedded IoT solutions. I enjoy turning
-                  real-world problems into reliable systems—from fire-fighting
-                  and farm robots to solar smart-home platforms—using Python, C,
-                  and ESP32/Arduino, and I also work with dashboarding and data
-                  visualization tools like Tableau and Looker Studio to
-                  communicate insights clearly.
+                  I’m Mohammad Zalloum, an AI Engineer and Robotics Developer based in Amman, Jordan, with a B.Sc. in Artificial Intelligence. I build AI applications that turn data into useful decisions, with experience in retrieval-augmented generation, knowledge graphs, predictive modeling, and real-time activity detection. My projects span the full workflow, from preparing data and evaluating models to building APIs and interfaces people can use. I also bring AI into physical systems through robotics and embedded development with ESP32 and Arduino.
                 </p>
 
                 <div
@@ -235,44 +226,14 @@ const Home = () => {
               </div>
             </div>
 
-            <div
-              className="w-full py-[10%] sm:py-0 lg:w-1/2 h-auto lg:h-[600px] xl:h-[750px] relative flex items-center justify-center order-2 lg:order-2 mt-8 lg:mt-0"
-              onMouseEnter={() => setIsHovering(true)}
-              onMouseLeave={() => setIsHovering(false)}
-              data-aos="fade-left"
-              data-aos-delay="600"
-            >
-              <div className="relative w-full opacity-90">
-                <div
-                  className={`absolute inset-0 bg-gradient-to-r from-[#6366f1]/10 to-[#a855f7]/10 rounded-3xl blur-3xl transition-all duration-700 ease-in-out ${
-                    isHovering ? "opacity-50 scale-105" : "opacity-20 scale-100"
-                  }`}
-                ></div>
-
-                <div
-                  className={`relative z-10 w-[72%] sm:w-[62%] lg:w-[65%] max-w-[420px] mx-auto opacity-90 transform transition-transform duration-500 ${
-                    isHovering ? "scale-102" : "scale-100"
-                  }`}
-                >
-                  <img
-                    src={codingGifSrc}
-                    alt="Coding animation"
-                    className="w-full h-auto object-contain"
-                    loading="eager"
-                  />
-                </div>
-
-                <div
-                  className={`absolute inset-0 pointer-events-none transition-all duration-700 ${
-                    isHovering ? "opacity-50" : "opacity-20"
-                  }`}
-                >
-                  <div
-                    className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-to-br from-indigo-500/10 to-purple-500/10 blur-3xl animate-[pulse_6s_cubic-bezier(0.4,0,0.6,1)_infinite] transition-all duration-700 ${
-                      isHovering ? "scale-110" : "scale-100"
-                    }`}
-                  ></div>
-                </div>
+            <div className="order-2 flex w-full items-center justify-center lg:w-2/5" data-aos="fade-left" data-aos-delay="600">
+              <div className="w-full max-w-[20rem] rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/80 to-indigo-950/40 p-5 shadow-2xl shadow-indigo-900/20 sm:p-7">
+                <img
+                  src={codingGifSrc}
+                  alt="Animated illustration of a coding workspace with a computer, phone, and gears"
+                  className="mx-auto h-auto w-full max-w-[15rem] object-contain"
+                  loading="eager"
+                />
               </div>
             </div>
           </div>

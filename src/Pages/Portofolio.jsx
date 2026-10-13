@@ -20,11 +20,10 @@ import {
   Boxes,
   Bot,
   BrainCircuit,
-  Blocks,
 } from "lucide-react";
 import { asset } from "../utils/asset.js";
 import { aiProjects } from "../data/aiProjects.js";
-import { mergeProjectCatalog, sortAiProjects } from "../utils/projectCatalog.js";
+import { isBlockchainProject, mergeProjectCatalog, sortAiProjects } from "../utils/projectCatalog.js";
 
 /* ========= Helpers ========= */
 const ToggleButton = ({ onClick, isShowingMore }) => (
@@ -92,51 +91,9 @@ function a11yProps(index) {
 
 const encodeLocal = (p) => (p ? encodeURI(p) : p);
 
-const blockchainProjectPlaceholder = `data:image/svg+xml;utf8,${encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
-  <defs>
-    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0f172a" />
-      <stop offset="50%" stop-color="#1e1b4b" />
-      <stop offset="100%" stop-color="#1d4ed8" />
-    </linearGradient>
-    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.9" />
-      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.9" />
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="700" rx="36" fill="url(#bg)" />
-  <circle cx="220" cy="120" r="170" fill="#8b5cf6" opacity="0.08" />
-  <circle cx="1040" cy="580" r="220" fill="#3b82f6" opacity="0.10" />
-
-  <rect x="90" y="120" width="1020" height="460" rx="32" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.14)" />
-  <rect x="140" y="180" width="170" height="170" rx="24" fill="url(#glow)" opacity="0.95" />
-  <text x="225" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="62" font-weight="700" fill="white">BRIX</text>
-
-  <text x="380" y="245" font-family="Arial, sans-serif" font-size="64" font-weight="700" fill="white">Blockchain Project</text>
-  <text x="380" y="310" font-family="Arial, sans-serif" font-size="30" fill="#cbd5e1">Fractional real estate investment dApp</text>
-
-  <rect x="380" y="360" width="180" height="44" rx="22" fill="rgba(139,92,246,0.18)" stroke="rgba(139,92,246,0.35)" />
-  <text x="470" y="389" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#e9d5ff">Solidity</text>
-
-  <rect x="580" y="360" width="160" height="44" rx="22" fill="rgba(59,130,246,0.18)" stroke="rgba(59,130,246,0.35)" />
-  <text x="660" y="389" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#dbeafe">Truffle</text>
-
-  <rect x="760" y="360" width="170" height="44" rx="22" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.16)" />
-  <text x="845" y="389" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#e2e8f0">Next.js</text>
-
-  <rect x="380" y="430" width="240" height="44" rx="22" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.14)" />
-  <text x="500" y="459" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#e2e8f0">DAO Governance</text>
-
-  <rect x="640" y="430" width="210" height="44" rx="22" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.14)" />
-  <text x="745" y="459" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#e2e8f0">Tokenized Shares</text>
-</svg>
-`)}`;
-
 const projectCategories = [
   { key: "ai", label: "AI Projects", icon: BrainCircuit },
   { key: "robotics", label: "Robotics", icon: Bot },
-  { key: "blockchain", label: "Blockchain", icon: Blocks },
 ];
 
 const projectCategoryContent = {
@@ -154,14 +111,6 @@ const projectCategoryContent = {
     emptyText:
       'This section is ready. Add any future AI project with category: "ai" and it will appear here automatically.',
     icon: BrainCircuit,
-  },
-  blockchain: {
-    description:
-      "Blockchain, smart contracts, dApps, and decentralized product experiments.",
-    emptyTitle: "No blockchain projects yet",
-    emptyText:
-      'This section is ready for Web3 work. Add any future blockchain project with category: "blockchain" and it will appear here automatically.',
-    icon: Blocks,
   },
 };
 
@@ -182,22 +131,6 @@ const detectProjectCategory = (project) => {
     return "ai";
   }
 
-  if (
-    [
-      "blockchain",
-      "web3",
-      "smart contracts",
-      "smart contract",
-      "solidity",
-      "ethereum",
-      "dapp",
-      "dao",
-      "defi",
-    ].includes(rawCategory)
-  ) {
-    return "blockchain";
-  }
-
   const searchableText = `${
     project?.Title || project?.title || ""
   } ${project?.Description || project?.description || ""}`.toLowerCase();
@@ -208,14 +141,6 @@ const detectProjectCategory = (project) => {
     )
   ) {
     return "ai";
-  }
-
-  if (
-    /blockchain|web3|solidity|smart contract|ethereum|dao|defi|dapp|on-chain|tokenized|tokenised|fractional real estate|real estate investment/.test(
-      searchableText
-    )
-  ) {
-    return "blockchain";
   }
 
   return "robotics";
@@ -300,17 +225,6 @@ const localProjects = [
   },
 
   {
-  id: 6,
-  Img: asset("projects/smart-helmet.png"),
-  Title: "Safeguard Fall & Activity Detection",
-  Description:
-    "An AI-based fall and ADL detection system built with a hierarchical Temporal Convolutional Network (TCN) using chest-mounted IMU signals from the UMAFall dataset. It performs both coarse classification (ADL vs FALL) and fine-grained activity recognition across 11 motion classes for the Safeguard Helmet project.",
-  Link: "https://github.com/mohammadzalloum/Safeguard-Fall-ADL-TCN",
-  badge: "AI",
-  category: "ai",
-},
-
-  {
     id: 7,
     Img: asset("projects/smarthome.png"),
     Title: "Smart home model",
@@ -319,17 +233,6 @@ const localProjects = [
     Link: "https://github.com/mohammadzalloum/Smart-home-model",
     category: "robotics",
   },
-  {
-    id: 8,
-    Img: blockchainProjectPlaceholder,
-    Title: "BRIX Fractional Real Estate",
-    Description:
-      "A blockchain-based fractional real-estate investment dApp built with Solidity smart contracts, Truffle, Ganache, and a Next.js frontend. It focuses on tokenized property shares, on-chain ownership and distribution flows, and DAO-style governance for property decisions and expenses.",
-    Link: "https://github.com/mohammadzalloum/brix-fractional-real-estate",
-    category: "blockchain",
-    badge: "Web3",
-  },
-
     {
     id: 9,
     Img: asset("projects/smartbasin.png"),
@@ -342,11 +245,11 @@ const localProjects = [
 ];
 
 // Rank the six portfolio highlights independently of Supabase row order.
-// The existing local Safeguard card remains the canonical record for that project.
+// Curated AI records remain canonical when Supabase contains older copies.
 const prioritizedAiProjects = [
   aiProjects.find((project) => project.id === "gridsense-office"),
   aiProjects.find((project) => project.id === "petra-churn-prediction"),
-  localProjects.find((project) => project.id === 6),
+  aiProjects.find((project) => project.id === "safeguard-smart-helmet"),
   aiProjects.find((project) => project.id === "rag-nexus"),
   aiProjects.find((project) => project.id === "jena-climate-temperature-forecasting"),
   aiProjects.find((project) => project.id === "sentiment-analysis"),
@@ -440,7 +343,7 @@ export default function FullWidthTabs() {
     prioritizedAiProjects,
     mergedProjects,
     localProjects
-  );
+  ).filter((project) => !isBlockchainProject(project));
 
   const normalizedProjects = rawProjects.map((p, i) => ({
     ...p,
@@ -460,7 +363,7 @@ export default function FullWidthTabs() {
       acc[project.Category] = (acc[project.Category] || 0) + 1;
       return acc;
     },
-    { robotics: 0, ai: 0, blockchain: 0 }
+    { robotics: 0, ai: 0 }
   );
 
   const categoryProjects = normalizedProjects.filter(

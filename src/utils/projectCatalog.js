@@ -8,6 +8,26 @@ const projectLink = (project) =>
     .replace(/\/+$/, "")
     .replace(/\/tree\/main$/, "");
 
+export const isBlockchainProject = (project) => {
+  const category = String(project?.Category || project?.category || "")
+    .trim()
+    .toLowerCase();
+  if (["blockchain", "web3", "smart contracts", "smart contract", "solidity", "ethereum", "dapp", "dao", "defi"].includes(category)) {
+    return true;
+  }
+
+  // Match portfolio classification and identity, not passing mentions in an unrelated summary.
+  const searchableText = `${projectTitle(project)} ${projectLink(project)}`;
+  return /blockchain|web3|solidity|smart contract|ethereum|\bdao\b|\bdefi\b|\bdapp\b|on-chain|tokenized|tokenised|fractional real estate|\bbrix\b/i.test(searchableText);
+};
+
+export const isSafeguardProject = (project) => {
+  const title = projectTitle(project);
+  return projectLink(project).includes("safeguard-fall-adl-tcn") ||
+    (title.startsWith("safeguard") &&
+      (title.includes("fall") || title.includes("helmet")));
+};
+
 export const isSameProject = (left, right) => {
   const leftLink = projectLink(left);
   const rightLink = projectLink(right);
@@ -17,9 +37,8 @@ export const isSameProject = (left, right) => {
   const rightTitle = projectTitle(right);
   if (leftTitle && leftTitle === rightTitle) return true;
 
-  // The existing Safeguard card has also used the shorter "ADL" title.
-  return leftTitle.startsWith("safeguard fall ") &&
-    rightTitle.startsWith("safeguard fall ");
+  // Match the earlier Safeguard card even if a remote row lacks its source URL.
+  return isSafeguardProject(left) && isSafeguardProject(right);
 };
 
 export const mergeProjectCatalog = (prioritized, remote, local) => {

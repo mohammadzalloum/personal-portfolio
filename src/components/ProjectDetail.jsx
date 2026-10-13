@@ -5,6 +5,8 @@ import {
   ChevronRight, Layers, Layout, Globe, Package, Cpu, Code,
 } from "lucide-react";
 import Swal from 'sweetalert2';
+import NotFoundPage from "../Pages/404.jsx";
+import { isBlockchainProject, isSafeguardProject } from "../utils/projectCatalog.js";
 
 const TECH_ICONS = {
   React: Globe,
@@ -98,14 +100,19 @@ const ProjectDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [project, setProject] = useState(null);
+  const [isLookupComplete, setIsLookupComplete] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     const storedProjects = JSON.parse(localStorage.getItem("projects")) || [];
     const selectedProject = storedProjects.find((p) => String(p.id) === id);
+    if (selectedProject && isSafeguardProject(selectedProject)) {
+      navigate("/project/safeguard-smart-helmet", { replace: true });
+      return;
+    }
     
-    if (selectedProject) {
+    if (selectedProject && !isBlockchainProject(selectedProject)) {
       const enhancedProject = {
         ...selectedProject,
         Features: selectedProject.Features || [],
@@ -113,8 +120,13 @@ const ProjectDetails = () => {
         Github: selectedProject.Github || 'https://github.com/EkiZR',
       };
       setProject(enhancedProject);
+    } else {
+      setProject(null);
     }
-  }, [id]);
+    setIsLookupComplete(true);
+  }, [id, navigate]);
+
+  if (!project && isLookupComplete) return <NotFoundPage />;
 
   if (!project) {
     return (
