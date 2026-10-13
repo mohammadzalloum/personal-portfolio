@@ -3,6 +3,7 @@ import { FileText, Code, Award, Globe, ArrowUpRight, Sparkles } from "lucide-rea
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { asset } from "../utils/asset.js";
+import PropTypes from "prop-types";
 
 /* ========= Smooth scroll that works with HashRouter & GitHub Pages ========= */
 const smoothScrollToId = (id) => (e) => {
@@ -112,10 +113,9 @@ const StatCard = memo(({ icon: Icon, color, value, label, description, animation
 ));
 
 /* ================= About Page ================= */
-const AboutPage = () => {
-  const { totalProjects, totalCertificates, YearExperience } = useMemo(
+const AboutPage = ({ totalProjects }) => {
+  const { totalCertificates, YearExperience } = useMemo(
     () => ({
-      totalProjects: 7,
       totalCertificates: 6,
       YearExperience: 0,
     }),
@@ -150,9 +150,9 @@ const AboutPage = () => {
       {
         icon: Code,
         color: "from-[#6366f1] to-[#a855f7]",
-        value: totalProjects,
+        value: totalProjects ?? "—",
         label: "Total Projects",
-        description: "Innovative web solutions crafted",
+        description: "Unique projects in this portfolio",
         animation: "fade-right",
       },
       {
@@ -240,6 +240,10 @@ const AboutPage = () => {
       </div>
     </div>
   );
+};
+
+AboutPage.propTypes = {
+  totalProjects: PropTypes.number,
 };
 
 export default memo(AboutPage);

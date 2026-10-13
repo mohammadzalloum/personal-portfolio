@@ -16,7 +16,10 @@ import NotFoundPage from "./Pages/404.jsx";
 
 import { AnimatePresence } from "framer-motion";
 
-const LandingPage = ({ showWelcome, setShowWelcome }) => (
+const LandingPage = ({ showWelcome, setShowWelcome }) => {
+  const [totalProjects, setTotalProjects] = useState(null);
+
+  return (
   <>
     <AnimatePresence mode="wait">
       {showWelcome && (
@@ -29,8 +32,8 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => (
         <Navbar />
         <AnimatedBackground />
         <Home />
-        <About />
-        <Portofolio />
+        <About totalProjects={totalProjects} />
+        <Portofolio onProjectCountChange={setTotalProjects} />
         <ContactPage />
         <footer>
           <center>
@@ -52,7 +55,8 @@ const LandingPage = ({ showWelcome, setShowWelcome }) => (
       </>
     )}
   </>
-);
+  );
+};
 
 const ProjectPageLayout = () => (
   <>

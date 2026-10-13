@@ -227,14 +227,12 @@ const Home = () => {
             </div>
 
             <div className="order-2 flex w-full items-center justify-center lg:w-2/5" data-aos="fade-left" data-aos-delay="600">
-              <div className="w-full max-w-[20rem] rounded-3xl border border-white/10 bg-gradient-to-br from-slate-900/80 to-indigo-950/40 p-5 shadow-2xl shadow-indigo-900/20 sm:p-7">
-                <img
-                  src={codingGifSrc}
-                  alt="Animated illustration of a coding workspace with a computer, phone, and gears"
-                  className="mx-auto h-auto w-full max-w-[15rem] object-contain"
-                  loading="eager"
-                />
-              </div>
+              <img
+                src={codingGifSrc}
+                alt="Animated illustration of a coding workspace with a computer, phone, and gears"
+                className="block h-auto w-full max-w-[17rem] object-contain"
+                loading="eager"
+              />
             </div>
           </div>
         </div>

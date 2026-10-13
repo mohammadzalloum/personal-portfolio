@@ -270,7 +270,7 @@ const localFallbackCertificates = [
 ];
 
 /* ========= Component ========= */
-export default function FullWidthTabs() {
+export default function FullWidthTabs({ onProjectCountChange }) {
   const theme = useTheme();
   const [value, setValue] = useState(0);
 
@@ -357,6 +357,10 @@ export default function FullWidthTabs() {
     badge: p.badge || p.Badge || undefined,
     Category: detectProjectCategory(p),
   }));
+
+  useEffect(() => {
+    onProjectCountChange(normalizedProjects.length);
+  }, [normalizedProjects.length, onProjectCountChange]);
 
   const projectCounts = normalizedProjects.reduce(
     (acc, project) => {
@@ -663,3 +667,7 @@ export default function FullWidthTabs() {
     </div>
   );
 }
+
+FullWidthTabs.propTypes = {
+  onProjectCountChange: PropTypes.func.isRequired,
+};
