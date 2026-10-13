@@ -1,5 +1,5 @@
 ﻿import React, { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useParams } from "react-router-dom";
 import "./index.css";
 
 import Home from "./Pages/Home.jsx";
@@ -9,6 +9,8 @@ import Navbar from "./components/Navbar.jsx";
 import Portofolio from "./Pages/Portofolio.jsx";
 import ContactPage from "./Pages/Contact.jsx";
 import ProjectDetails from "./components/ProjectDetail.jsx";
+import AiProjectDetail from "./components/AiProjectDetail.jsx";
+import { getAiProject } from "./data/aiProjects.js";
 import WelcomeScreen from "./Pages/WelcomeScreen.jsx";
 import NotFoundPage from "./Pages/404.jsx";
 
@@ -75,6 +77,11 @@ const ProjectPageLayout = () => (
   </>
 );
 
+const PortfolioProjectPage = () => {
+  const { id } = useParams();
+  return getAiProject(id) ? <AiProjectDetail /> : <ProjectPageLayout />;
+};
+
 export default function App() {
   const [showWelcome, setShowWelcome] = useState(true);
 
@@ -89,7 +96,7 @@ export default function App() {
           />
         }
       />
-      <Route path="/project/:id" element={<ProjectPageLayout />} />
+      <Route path="/project/:id" element={<PortfolioProjectPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

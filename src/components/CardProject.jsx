@@ -1,8 +1,9 @@
 // src/components/CardProject.jsx
-import React from "react";
-import { ArrowRight } from "lucide-react";
+import PropTypes from "prop-types";
+import { ArrowRight, Github } from "lucide-react";
+import { Link } from "react-router-dom";
 
-const CardProject = ({ Img, Title, Description, Link: ProjectLink, badge }) => {
+const CardProject = ({ Img, Title, Subtitle, Description, Link: ProjectLink, badge, TechStack, ImageAlt, imageCaption, detailPath }) => {
   const handleDetails = (e) => {
     if (!ProjectLink) {
       e.preventDefault();
@@ -32,10 +33,11 @@ const CardProject = ({ Img, Title, Description, Link: ProjectLink, badge }) => {
 
             <img
               src={Img}
-              alt={Title || "Project Image"}
-              className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+              alt={ImageAlt || Title || "Project image"}
+              className={`${detailPath ? "w-full aspect-video object-contain" : "w-full h-full object-cover"} transform group-hover:scale-105 transition-transform duration-500`}
               loading="lazy"
             />
+            {imageCaption && <span className="absolute bottom-2 right-2 rounded bg-slate-950/80 px-2 py-1 text-[10px] text-slate-200">{imageCaption}</span>}
           </div>
 
           {/* Info */}
@@ -44,12 +46,22 @@ const CardProject = ({ Img, Title, Description, Link: ProjectLink, badge }) => {
               {Title || "Untitled Project"}
             </h3>
 
+            {Subtitle && <p className="text-sm font-medium text-purple-300">{Subtitle}</p>}
             <p className="text-gray-300/80 text-sm leading-relaxed line-clamp-2">
               {Description || "No description provided."}
             </p>
 
-            {/* Single Action: Details -> external GitHub link */}
-            <div className="pt-4 flex items-center justify-end">
+            {TechStack?.length > 0 && (
+              <ul className="flex flex-wrap gap-1.5" aria-label="Technologies used">
+                {TechStack.map((tech) => <li key={tech} className="rounded-full border border-purple-400/20 bg-purple-400/10 px-2 py-1 text-xs text-purple-200">{tech}</li>)}
+              </ul>
+            )}
+            <div className="pt-4 flex flex-wrap items-center justify-end gap-2">
+              {detailPath && (
+                <Link to={detailPath} className="inline-flex items-center gap-2 rounded-lg bg-purple-500/20 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-purple-500/30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-purple-400">
+                  Details <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              )}
               {ProjectLink ? (
                 <a
                   href={ProjectLink}
@@ -60,8 +72,8 @@ const CardProject = ({ Img, Title, Description, Link: ProjectLink, badge }) => {
                              transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none
                              focus:ring-2 focus:ring-purple-500/50"
                 >
-                  <span className="text-sm font-medium">Details</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span className="text-sm font-medium">{detailPath ? "GitHub" : "Details"}</span>
+                  {detailPath ? <Github className="w-4 h-4" aria-hidden="true" /> : <ArrowRight className="w-4 h-4" aria-hidden="true" />}
                 </a>
               ) : (
                 <span className="text-gray-500 text-sm">Details Not Available</span>
@@ -75,6 +87,19 @@ const CardProject = ({ Img, Title, Description, Link: ProjectLink, badge }) => {
       </div>
     </div>
   );
+};
+
+CardProject.propTypes = {
+  Img: PropTypes.string,
+  Title: PropTypes.string,
+  Subtitle: PropTypes.string,
+  Description: PropTypes.string,
+  Link: PropTypes.string,
+  badge: PropTypes.string,
+  TechStack: PropTypes.arrayOf(PropTypes.string),
+  ImageAlt: PropTypes.string,
+  imageCaption: PropTypes.string,
+  detailPath: PropTypes.string,
 };
 
 export default CardProject;

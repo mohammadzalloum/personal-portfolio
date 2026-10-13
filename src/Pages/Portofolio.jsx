@@ -23,6 +23,8 @@ import {
   Blocks,
 } from "lucide-react";
 import { asset } from "../utils/asset.js";
+import { aiProjects } from "../data/aiProjects.js";
+import { mergeProjectCatalog, sortAiProjects } from "../utils/projectCatalog.js";
 
 /* ========= Helpers ========= */
 const ToggleButton = ({ onClick, isShowingMore }) => (
@@ -132,8 +134,8 @@ const blockchainProjectPlaceholder = `data:image/svg+xml;utf8,${encodeURICompone
 `)}`;
 
 const projectCategories = [
-  { key: "robotics", label: "Robotics", icon: Bot },
   { key: "ai", label: "AI Projects", icon: BrainCircuit },
+  { key: "robotics", label: "Robotics", icon: Bot },
   { key: "blockchain", label: "Blockchain", icon: Blocks },
 ];
 
@@ -300,7 +302,7 @@ const localProjects = [
   {
   id: 6,
   Img: asset("projects/smart-helmet.png"),
-  Title: "Safeguard Fall & ADL Detection",
+  Title: "Safeguard Fall & Activity Detection",
   Description:
     "An AI-based fall and ADL detection system built with a hierarchical Temporal Convolutional Network (TCN) using chest-mounted IMU signals from the UMAFall dataset. It performs both coarse classification (ADL vs FALL) and fine-grained activity recognition across 11 motion classes for the Safeguard Helmet project.",
   Link: "https://github.com/mohammadzalloum/Safeguard-Fall-ADL-TCN",
@@ -339,6 +341,20 @@ const localProjects = [
   }
 ];
 
+// Rank the six portfolio highlights independently of Supabase row order.
+// The existing local Safeguard card remains the canonical record for that project.
+const prioritizedAiProjects = [
+  aiProjects.find((project) => project.id === "gridsense-office"),
+  aiProjects.find((project) => project.id === "petra-churn-prediction"),
+  localProjects.find((project) => project.id === 6),
+  aiProjects.find((project) => project.id === "rag-nexus"),
+  aiProjects.find((project) => project.id === "jena-climate-temperature-forecasting"),
+  aiProjects.find((project) => project.id === "sentiment-analysis"),
+].filter(Boolean).map((project, portfolioPriority) => ({
+  ...project,
+  portfolioPriority,
+}));
+
 // Local fallback certificates
 const localFallbackCertificates = [
   { Img: asset("certificates/corrleationone.jpg"), Title: "Certificate 1" },
@@ -360,7 +376,7 @@ export default function FullWidthTabs() {
 
   const [showAllCertificates, setShowAllCertificates] = useState(false);
   const [activeProjectCategory, setActiveProjectCategory] =
-    useState("robotics");
+    useState("ai");
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -420,19 +436,14 @@ export default function FullWidthTabs() {
   /* ====== Normalize & Merge ====== */
   const mergedProjects = projects?.length ? projects : [];
 
-  const rawProjects = [
-    ...mergedProjects,
-    ...localProjects.filter(
-      (lp) =>
-        !mergedProjects.some(
-          (rp) =>
-            String(rp.id ?? rp.Title ?? "").toLowerCase() ===
-            String(lp.id ?? lp.Title ?? "").toLowerCase()
-        )
-    ),
-  ];
+  const rawProjects = mergeProjectCatalog(
+    prioritizedAiProjects,
+    mergedProjects,
+    localProjects
+  );
 
   const normalizedProjects = rawProjects.map((p, i) => ({
+    ...p,
     id: p.id ?? i,
     Img: normalizeImagePath(
       p.Img || p.image || p.thumbnail || p.cover || p.url || p.path
@@ -452,9 +463,12 @@ export default function FullWidthTabs() {
     { robotics: 0, ai: 0, blockchain: 0 }
   );
 
-  const displayedProjectsFixed = normalizedProjects.filter(
+  const categoryProjects = normalizedProjects.filter(
     (project) => project.Category === activeProjectCategory
   );
+  const displayedProjectsFixed = activeProjectCategory === "ai"
+    ? sortAiProjects(categoryProjects)
+    : categoryProjects;
 
   const rawCertificates =
     certificates?.length ? certificates : localFallbackCertificates;
@@ -603,6 +617,8 @@ export default function FullWidthTabs() {
                       <button
                         key={category.key}
                         onClick={() => setActiveProjectCategory(category.key)}
+                        type="button"
+                        aria-pressed={isActive}
                         className={`group relative inline-flex items-center gap-2 rounded-full border px-5 py-3 text-sm md:text-base font-semibold transition-all duration-300 backdrop-blur-md ${
                           isActive
                             ? "border-violet-400/40 bg-gradient-to-r from-violet-500/20 to-blue-500/20 text-white shadow-[0_0_30px_rgba(139,92,246,0.18)]"
@@ -631,6 +647,9 @@ export default function FullWidthTabs() {
                   })}
                 </div>
 
+                <h3 className="text-xl font-semibold text-white md:text-2xl">
+                  {projectCategories.find((category) => category.key === activeProjectCategory)?.label}
+                </h3>
                 <p className="max-w-2xl text-sm md:text-base text-slate-400">
                   {activeCategoryMeta.description}
                 </p>
@@ -641,7 +660,7 @@ export default function FullWidthTabs() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-screen-2xl w-full">
                     {displayedProjectsFixed.map((project, idx) => (
                       <div
-                        key={project.id ?? idx}
+                        key={`${project.Category}-${project.id ?? idx}-${project.Title}`}
                         data-aos={idx % 2 === 0 ? "fade-up-right" : "fade-up-left"}
                         data-aos-duration={idx % 2 === 0 ? "1000" : "1200"}
                       >
@@ -651,6 +670,11 @@ export default function FullWidthTabs() {
                           Description={project.Description}
                           Link={project.Link}
                           badge={project.badge}
+                          Subtitle={project.Subtitle}
+                          TechStack={project.TechStack}
+                          ImageAlt={project.ImageAlt}
+                          imageCaption={project.ImageCaption}
+                          detailPath={aiProjects.some((entry) => entry.id === project.id) ? `/project/${project.id}` : undefined}
                         />
                       </div>
                     ))}
